@@ -1,6 +1,5 @@
-"""Paper figures. Colors follow the dataviz reference palette (light mode, print)."""
+"""Figures for the paper. Usage: python make_figures.py [name ...]"""
 import sys
-from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
@@ -8,16 +7,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from common import PROC, RES, ROOT
 from spectra import GRID, marsify, preprocess
 
-ROOT = Path(__file__).resolve().parent.parent
-PROC = ROOT / "data/processed"
-RES = ROOT / "results"
 FIG = ROOT / "paper/figures"
 
 BLUE, ORANGE, AQUA, YELLOW = "#2a78d6", "#eb6834", "#1baf7a", "#eda100"
 INK, INK2, MUTED, GRIDC, AXIS = "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#c3c2b7"
-GRAY_BAR = "#c3c2b7"
 
 plt.rcParams.update({
     "font.family": "sans-serif",
@@ -43,7 +39,6 @@ def save(fig, name):
 
 
 def fig_domain_gap():
-    """Lab reference vs real SuperCam spectrum vs marsified lab spectrum, plus the instrument feature."""
     meta = pd.read_csv(PROC / "rruff_meta.csv")
     R = np.load(PROC / "rruff.npz", allow_pickle=True)
     raw = np.load(PROC / "rruff_raw.npz", allow_pickle=True)
@@ -130,7 +125,6 @@ def hbars(ax, d, highlight):
 
 
 def fig_mars_bars():
-    """Balanced accuracy on the SuperCam test split, both library settings (small multiples)."""
     df = pd.read_csv(RES / "mars_results.csv")
     maj = df[df.method == "always-olivine"].bal_acc.iloc[0]
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 3.3), sharey=True)
@@ -151,7 +145,6 @@ def fig_mars_bars():
 
 
 def fig_sim_vs_real():
-    """(a) Lab accuracy under simulated Mars degradation; (b) simulated vs real Mars performance."""
     lab = pd.read_csv(RES / "lab_results.csv")
     mars = pd.read_csv(RES / "mars_results.csv")
     fig, (a, b) = plt.subplots(1, 2, figsize=(7.0, 3.0), gridspec_kw=dict(width_ratios=[1, 1.1]))
@@ -202,7 +195,7 @@ def _confusion(ax, p, col, title):
     cols = rows + [c for c in ["serpentine", "perchlorate", "phosphate", "other"] if c in set(p[col])]
     C = np.zeros((len(rows), len(cols)), int)
     for prim, groups, pred in zip(p.primary, p.groups, p[col]):
-        shown = prim if pred in groups.split("|") else pred  # a hit on any reported group -> diagonal
+        shown = prim if pred in groups.split("|") else pred
         C[rows.index(prim), cols.index(shown)] += 1
     R = C / C.sum(1, keepdims=True)
     from matplotlib.colors import LinearSegmentedColormap

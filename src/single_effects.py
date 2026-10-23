@@ -1,13 +1,11 @@
-"""Follow-up: which simulated-Mars effect helps or hurts? Train the CNN with ONE effect at a time
-(2 seeds each) and score it on the dev and test splits. Writes results/single_effects.csv."""
+"""Train the CNN with one simulated-Mars effect at a time and score it on dev and test."""
 import time
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from run_experiments import (CACHE, COPIES, EVAL_EXCLUDE, MARS_GROUPS, RES, cached_marsify,
-                             group_from_species_proba, lab_split, load, log, mars_scores)
+from common import (CACHE, COPIES, MARS_GROUPS, RES, cached_marsify, lab_split, load, log, mars_scores,
+                    mars_split, species_to_group)
 from spectra import MARS_PARTS
 
 
@@ -19,11 +17,8 @@ def main():
     groups = meta.group.to_numpy()
     tr, _ = lab_split(meta)
     species = sorted(meta.name.unique())
-    sp_index = {s: i for i, s in enumerate(species)}
     species_group = dict(zip(meta.name, meta.group))
-    y_sp = meta.name.map(sp_index).to_numpy()
-    allowed = set(MARS_GROUPS)
-    splits = {s: mars[(mars.split == s) & ~mars.primary.isin(EVAL_EXCLUDE)] for s in ["dev", "test"]}
+    y_sp = meta.name.map({s: i for i, s in enumerate(species)}).to_numpy()
 
     def models_for(tag, parts, seeds):
         out = []
@@ -48,16 +43,17 @@ def main():
         return out
 
     variants = {"none (lab only)": ("cnn-clean", None)}
-    for p in MARS_PARTS:
-        variants[f"only {p}"] = (f"single-{p}", [p])
+    variants.update({f"only {p}": (f"single-{p}", [p]) for p in MARS_PARTS})
     variants["all five"] = ("cnn-marsified", list(MARS_PARTS))
+
     rows = []
     for label, (tag, parts) in variants.items():
         models = models_for(tag, parts, [0, 1])
-        for split, df in splits.items():
+        for split in ["dev", "test"]:
+            df = mars_split(mars, split)
             Xq = Xmars[df.index.to_numpy()]
             P = np.mean([cnn_proba(m, Xq) for m in models], axis=0)
-            g = group_from_species_proba(P, species, species_group, allowed)
+            g = species_to_group(P, species, species_group, set(MARS_GROUPS))
             r = mars_scores(g, df, n_boot=2000 if split == "test" else 1)
             rows.append(dict(variant=label, split=split, **r))
             log(f"{label:18s} {split:4s} acc {r['acc']:.2f} bal {r['bal_acc']:.2f}")

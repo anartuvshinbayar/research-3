@@ -1,34 +1,27 @@
-"""Shared spectrum handling: preprocessing (same for lab and Mars) and Mars-style degradation."""
+"""Spectrum preprocessing and simulated-Mars degradation."""
 import numpy as np
-from scipy import sparse
 from scipy.linalg import solveh_banded
-from scipy.sparse.linalg import spsolve
 
-# Common Raman-shift grid (cm^-1). Covers the mineral fingerprint region where
-# the SuperCam team reports its diagnostic peaks (olivine ~820/850, carbonate
-# ~1090, sulfate ~1010, quartz ~465, pyroxene ~670/1010, feldspar ~510).
-GRID = np.arange(150.0, 1300.0 + 1e-9, 2.0)
+GRID = np.arange(150.0, 1300.0 + 1e-9, 2.0)  # cm^-1
 SUPERCAM_FWHM = 12.0  # cm^-1, Wiens et al. (2021)
+MARS_PARTS = ("res", "shift", "mix", "bg", "noise")
 
 
 def _second_diff_bands(n, lam):
-    """Lower bands of lam * D'D for the second-difference operator D."""
     main = np.full(n, 6.0)
     main[[0, -1]] = 1.0
     main[[1, -2]] = 5.0
     first = np.full(n - 1, -4.0)
     first[[0, -1]] = -2.0
-    second = np.ones(n - 2)
     ab = np.zeros((3, n))
-    ab[0], ab[1, :-1], ab[2, :-2] = main, first, second
+    ab[0], ab[1, :-1], ab[2, :-2] = main, first, np.ones(n - 2)
     return lam * ab
 
 
 def als_baseline(y, lam=1e5, p=0.01, niter=10):
-    """Asymmetric least squares baseline (Eilers & Boelens 2005), banded solver."""
-    n = len(y)
-    bands = _second_diff_bands(n, lam)
-    w = np.ones(n)
+    """Asymmetric least squares baseline (Eilers & Boelens 2005)."""
+    bands = _second_diff_bands(len(y), lam)
+    w = np.ones(len(y))
     for _ in range(niter):
         ab = bands.copy()
         ab[0] += w
@@ -37,34 +30,19 @@ def als_baseline(y, lam=1e5, p=0.01, niter=10):
     return z
 
 
-def als_baseline_sparse(y, lam=1e5, p=0.01, niter=10):
-    """Reference sparse implementation, kept for testing the banded version."""
-    n = len(y)
-    D = sparse.diags([1.0, -2.0, 1.0], [0, -1, -2], shape=(n, n - 2))
-    DDT = lam * (D @ D.T)
-    w = np.ones(n)
-    for _ in range(niter):
-        W = sparse.spdiags(w, 0, n, n)
-        z = spsolve(sparse.csc_matrix(W + DDT), w * y)
-        w = p * (y > z) + (1 - p) * (y < z)
-    return z
-
-
 def to_grid(x, y, grid=GRID):
-    """Interpolate onto the grid; points outside the measured range become 0."""
     order = np.argsort(x)
     x, y = np.asarray(x, float)[order], np.asarray(y, float)[order]
     out = np.interp(grid, x, y, left=np.nan, right=np.nan)
     valid = ~np.isnan(out)
     if valid.sum() < 10:
         return None, valid
-    # Edge-fill so the baseline fit is not dragged by artificial zeros.
     out[~valid] = np.interp(grid[~valid], grid[valid], out[valid])
     return out, valid
 
 
 def preprocess(x, y, grid=GRID):
-    """Resample -> remove baseline -> unit-normalize. Identical for every source."""
+    """Resample, subtract baseline, normalize to unit length."""
     g, valid = to_grid(x, y, grid)
     if g is None:
         return None
@@ -78,7 +56,6 @@ def preprocess(x, y, grid=GRID):
 
 
 def gaussian_broaden(x, y, fwhm):
-    """Convolve a spectrum sampled on (possibly uneven, unsorted) x with a Gaussian of given FWHM."""
     x, idx = np.unique(np.asarray(x, float), return_index=True)
     y = np.asarray(y, float)[idx]
     step = max(np.median(np.diff(x)), 0.25)
@@ -89,25 +66,15 @@ def gaussian_broaden(x, y, fwhm):
     if half < 1:
         return xe, ye
     k = np.exp(-0.5 * (np.arange(-half, half + 1) / sigma) ** 2)
-    k /= k.sum()
-    return xe, np.convolve(ye, k, mode="same")
-
-
-MARS_PARTS = ("res", "shift", "mix", "bg", "noise")
+    return xe, np.convolve(ye, k / k.sum(), mode="same")
 
 
 def marsify(x, y, rng, other=None, strength=1.0, parts=None):
-    """Turn a clean lab spectrum into something that looks like a SuperCam spectrum.
+    """Degrade a lab spectrum to look like a SuperCam spectrum.
 
-    Steps (each randomized): instrument resolution ("res"), wavenumber
-    calibration offset ("shift"), mixing with a second mineral ("mix"), broad
-    fluorescence-like background ("bg"), and shot noise ("noise").
-    `other` is an optional (x, y) spectrum to mix in. `strength` scales every
-    effect (0 = clean, 1 = default ranges). `parts` limits which steps run.
+    parts: subset of MARS_PARTS to apply. other: optional (x, y) spectrum to mix in.
     """
-    parts = set(MARS_PARTS if parts is None else parts)
-    if strength <= 0:
-        parts = set()
+    parts = set(MARS_PARTS if parts is None else parts) if strength > 0 else set()
     x = np.asarray(x, float)
     y = np.asarray(y, float)
     y = y - np.percentile(y, 1)
@@ -131,7 +98,6 @@ def marsify(x, y, rng, other=None, strength=1.0, parts=None):
         y = y + rng.uniform(0.1, 0.6) * oy
 
     if "bg" in parts:
-        # Broad background: decaying edge + gentle polynomial + a wide hump.
         t = (x - x.min()) / (x.max() - x.min() + 1e-12)
         bg = (rng.uniform(0, 3) * np.exp(-t / rng.uniform(0.05, 0.4))
               + rng.uniform(0, 1.5) * np.polyval(rng.normal(0, 1, 3), t) ** 2

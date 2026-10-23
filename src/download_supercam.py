@@ -1,18 +1,13 @@
-"""Download the SuperCam calibrated Raman spectra that the mission team labeled.
-
-Reads data/supercam_derived/supercam_raman.csv (the team's mineral ID table),
-finds each Source Product in the PDS calibrated-spectra archive, and saves the
-newest version of its FITS file to data/supercam_cal/.
-"""
+"""Download the SuperCam Raman label table and the calibrated spectra it refers to."""
 import csv
 import re
-import sys
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_supercam/data_calibrated_spectra"
+BUNDLE = "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_supercam"
+BASE = f"{BUNDLE}/data_calibrated_spectra"
 TABLE = ROOT / "data/supercam_derived/supercam_raman.csv"
 OUT = ROOT / "data/supercam_cal"
 
@@ -52,10 +47,13 @@ def fetch(product):
 
 
 def main():
+    if not TABLE.exists():
+        TABLE.parent.mkdir(parents=True, exist_ok=True)
+        urllib.request.urlretrieve(f"{BUNDLE}/data_derived_spectra/supercam_raman.csv", TABLE)
     OUT.mkdir(parents=True, exist_ok=True)
     with open(TABLE, newline="") as fh:
         products = [row["Source Product"].strip() for row in csv.DictReader(fh)]
-    # Pre-fill listings serially (one request per sol) to stay polite to the server.
+    # one listing request per sol, serially
     for sol in sorted({int(p.split("_")[1]) for p in products}):
         sol_listing(sol)
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -71,4 +69,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

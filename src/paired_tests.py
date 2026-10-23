@@ -1,11 +1,8 @@
-"""Paired cluster-bootstrap tests of differences in balanced accuracy between methods
-(same test spectra, resampling rocks). Writes results/paired_tests.csv."""
-from pathlib import Path
-
+"""Paired cluster-bootstrap tests of balanced-accuracy differences between methods."""
 import numpy as np
 import pandas as pd
 
-RES = Path(__file__).resolve().parent.parent / "results"
+from common import RES
 PAIRS = [("cosine-window|mars", "cosine|mars"), ("cosine-window|mars", "cnn-clean|mars"),
          ("cnn-clean|mars", "cnn-marsified|mars"), ("cnn-marsified+artifact|mars", "cnn-marsified|mars"),
          ("cosine|mars", "cosine|open"), ("cosine-window|mars", "cosine-broadened-window|mars")]

@@ -1,10 +1,4 @@
-"""Load RRUFF laboratory Raman spectra (unoriented, processed) and tag mineral groups.
-
-Output:
-  data/processed/rruff_raw.npz  native-resolution (x, y) arrays, for augmentation
-  data/processed/rruff.npz      preprocessed spectra on the common grid
-Both share the metadata columns: name, rruff_id, laser, chem, group.
-"""
+"""Read the RRUFF Raman zips, assign mineral groups, and save raw and preprocessed spectra."""
 import re
 import zipfile
 from pathlib import Path
@@ -35,15 +29,13 @@ NAME_GROUPS = {
 }
 NAME_TO_GROUP = {n: g for g, names in NAME_GROUPS.items() for n in names}
 
-
-# Elements that form their own oxyanion groups (arsenate, phosphate, vanadate, borate, ...).
-# A carbonate or sulfate may contain none of these besides its own C or S; otherwise mixed-anion
-# minerals such as beudantite (arsenate-sulfate) would be filed as sulfates.
+# A carbonate or sulfate may contain no anion-forming element other than its own C or S,
+# so mixed-anion minerals (e.g. arsenate-sulfates like beudantite) are not counted.
 ANION_FORMERS = {"C", "S", "As", "P", "V", "Cr", "Mo", "W", "Se", "Te", "B", "Si", "N", "Sb", "Ge", "U", "I"}
 
 
 def elements(chem):
-    chem = re.sub(r"\^[^^]*\^", "", chem).replace("NH_4", "")  # drop charges; ammonium is a cation
+    chem = re.sub(r"\^[^^]*\^", "", chem).replace("NH_4", "")
     return set(re.findall(r"[A-Z][a-z]?", chem))
 
 
@@ -52,7 +44,10 @@ def group_for(name, chem):
     if n in NAME_TO_GROUP:
         return NAME_TO_GROUP[n]
     c = chem.replace(" ", "")
-    others = lambda own: (elements(c) & ANION_FORMERS) - own
+
+    def others(own):
+        return (elements(c) & ANION_FORMERS) - own
+
     if "ClO_4" in c and not others(set()):
         return "perchlorate"
     if "CO_3" in c and not others({"C"}):

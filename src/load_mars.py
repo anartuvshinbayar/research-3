@@ -1,14 +1,9 @@
-"""Load SuperCam Raman spectra plus the mission team's mineral labels.
+"""Match SuperCam spectra to the team's mineral labels and save data/processed/mars.npz.
 
-Output: data/processed/mars.npz with
-  X        (n, len(GRID)) preprocessed spectra
-  primary  (n,) group of the first reported feature
-  groups   (n,) '|'-joined set of every group the team reported
-  conf     (n,) low / medium / high for the first feature
-  target, product, sol, split ('dev' or 'test', split by target)
+primary is the group of the first reported feature; groups lists every reported group.
+Targets (rocks) are split about 30/70 into dev and test.
 """
 import hashlib
-import re
 from pathlib import Path
 
 import numpy as np
