@@ -1,0 +1,31 @@
+\begin{tabular}{lcccc}
+\toprule
+ & Lab (clean) & \multicolumn{3}{c}{Mars test} \\
+\cmidrule(lr){2-2}\cmidrule(lr){3-5}
+Method & Group acc. & Acc. & Bal.\ acc. & 95\% CI (bal.) \\
+\midrule
+\multicolumn{5}{l}{\emph{Open library}}\\
+Library search & 98\% & 5\% & 19\% & 2\%--24\%\\
+\quad + skip fiber bump & 96\% & 6\% & 17\% & 1\%--21\%\\
+\quad + resolution-matched & 98\% & 5\% & 21\% & 1\%--25\%\\
+\quad + resolution-matched + skip & 95\% & 12\% & 28\% & 6\%--36\%\\
+CNN, lab spectra & 98\% & 6\% & 26\% & 0\%--30\%\\
+\quad + skip fiber bump & 98\% & 2\% & 7\% & 0\%--9\%\\
+CNN, simulated-Mars training & 98\% & 7\% & 27\% & 2\%--31\%\\
+\quad + skip fiber bump & 97\% & 5\% & 16\% & 2\%--20\%\\
+\quad + fiber-bump template & 98\% & 13\% & \textbf{32\%} & 5\%--39\%\\
+\addlinespace
+\multicolumn{5}{l}{\emph{Mars-candidate library}}\\
+Library search & 98\% & 45\% & 60\% & 33\%--66\%\\
+\quad + skip fiber bump & 96\% & 68\% & \textbf{72\%} & 51\%--79\%\\
+\quad + resolution-matched & 98\% & 38\% & 56\% & 29\%--63\%\\
+\quad + resolution-matched + skip & 95\% & 62\% & 66\% & 46\%--73\%\\
+CNN, lab spectra & 98\% & 44\% & 63\% & 44\%--68\%\\
+\quad + skip fiber bump & 98\% & 38\% & 55\% & 30\%--62\%\\
+CNN, simulated-Mars training & 98\% & 22\% & 48\% & 25\%--54\%\\
+\quad + skip fiber bump & 97\% & 24\% & 40\% & 14\%--46\%\\
+\quad + fiber-bump template & 98\% & 44\% & 58\% & 38\%--66\%\\
+\addlinespace
+Always ``olivine'' & -- & 50\% & 18\% & -- \\
+\bottomrule
+\end{tabular}

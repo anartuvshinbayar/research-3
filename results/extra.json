@@ -1,0 +1,123 @@
+{
+  "open_top1_frac_amorphous": 0.6235294117647059,
+  "open_top1_frac_other_group": 0.9490196078431372,
+  "open_top1_species": {
+    "Glass-(Tm)": 70,
+    "Opal": 42,
+    "Glass-(Gd)": 24,
+    "Libyan Desert glass": 21,
+    "Parasymplesite": 18,
+    "Yukonite": 9,
+    "Zykaite": 7,
+    "Quartz": 7,
+    "Symplesite": 6,
+    "Gotzenite": 6
+  },
+  "median_best_cosine_mars": 0.8069441914558411,
+  "median_best_cosine_lab": 0.9526480436325073,
+  "median_energy_below_560_mars": 0.7576004862785339,
+  "median_energy_below_560_lab": 0.40748918056488037,
+  "open_window_top1_frac_amorphous": 0.0392156862745098,
+  "dev_library": {
+    "cosine": 0.314,
+    "cosine-window": 0.562,
+    "cosine-broadened": 0.292,
+    "cosine-broadened-window": 0.477
+  },
+  "acc_by_conf::cosine-window|mars": {
+    "high": 0.829,
+    "low": 0.509,
+    "medium": 0.593
+  },
+  "confusions::cosine-window|mars": {
+    "carbonate": {
+      "pyroxene": 15,
+      "silica": 12,
+      "feldspar": 4,
+      "olivine": 1
+    },
+    "feldspar": {
+      "silica": 2,
+      "pyroxene": 1
+    },
+    "olivine": {
+      "pyroxene": 21,
+      "silica": 4,
+      "carbonate": 1
+    },
+    "sulfate": {
+      "pyroxene": 18,
+      "silica": 2,
+      "feldspar": 1
+    }
+  },
+  "acc_by_conf::cnn-clean|mars": {
+    "high": 0.559,
+    "low": 0.245,
+    "medium": 0.407
+  },
+  "confusions::cnn-clean|mars": {
+    "carbonate": {
+      "sulfate": 29,
+      "feldspar": 12,
+      "serpentine": 2
+    },
+    "feldspar": {
+      "sulfate": 1
+    },
+    "olivine": {
+      "sulfate": 42,
+      "feldspar": 22,
+      "carbonate": 12,
+      "pyroxene": 5,
+      "phosphate": 2,
+      "silica": 1
+    },
+    "pyroxene": {
+      "sulfate": 5,
+      "silica": 1,
+      "feldspar": 1
+    },
+    "sulfate": {
+      "feldspar": 4,
+      "pyroxene": 2,
+      "serpentine": 1,
+      "carbonate": 1
+    }
+  },
+  "acc_by_conf::cosine|mars": {
+    "high": 0.577,
+    "low": 0.208,
+    "medium": 0.429
+  },
+  "confusions::cosine|mars": {
+    "carbonate": {
+      "sulfate": 33,
+      "silica": 14,
+      "pyroxene": 1
+    },
+    "feldspar": {
+      "carbonate": 2
+    },
+    "olivine": {
+      "sulfate": 33,
+      "silica": 29,
+      "carbonate": 12,
+      "pyroxene": 2
+    },
+    "pyroxene": {
+      "sulfate": 5,
+      "silica": 3,
+      "carbonate": 1
+    },
+    "sulfate": {
+      "silica": 4,
+      "carbonate": 2
+    }
+  },
+  "n_by_conf": {
+    "high": 111,
+    "medium": 91,
+    "low": 53
+  }
+}

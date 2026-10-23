@@ -1,0 +1,14 @@
+# data is downloaded by the scripts
+data/
+.venv/
+scratch/
+__pycache__/
+*.pyc
+results/*.log
+paper/lit_notes.md
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out
+.DS_Store

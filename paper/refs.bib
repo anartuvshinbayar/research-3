@@ -1,0 +1,453 @@
+% refs.bib -- "Shazam for Mars Rocks?" (RRUFF -> SuperCam Raman transfer study)
+% Compiled 2026-10-09. Every entry below was checked field-by-field against a
+% primary record: Crossref API (api.crossref.org/works/<doi>), DataCite (PDS DOI),
+% arXiv API, JMLR site, PubMed/E-utilities, or the source PDF itself.
+% Conventions:
+%   * For journals that use article numbers (Springer SSR, AGU, Science eXXXX,
+%     Elsevier), the article number is placed in `pages`.
+%   * Long author lists are truncated after 5 names with "and others".
+%   * Ganin et al.: the JMLR page/bib truncates the 7th author as "Mario March";
+%     the full name (Mario Marchand) is taken from the arXiv record 1505.07818.
+
+% ---------------------------------------------------------------------------
+% Data sources, instruments, mission
+% ---------------------------------------------------------------------------
+
+@incollection{lafuente2015rruff,
+  author    = {Lafuente, Barbara and Downs, R. T. and Yang, H. and Stone, N.},
+  title     = {The power of databases: The {RRUFF} project},
+  booktitle = {Highlights in Mineralogical Crystallography},
+  editor    = {Armbruster, Thomas and Danisi, Rosa Micaela},
+  publisher = {De Gruyter},
+  address   = {Berlin, Boston},
+  year      = {2015},
+  pages     = {1--30},
+  isbn      = {9783110417043},
+  doi       = {10.1515/9783110417104-003}
+}
+
+@article{wiens2021supercam,
+  author  = {Wiens, Roger C. and Maurice, Sylvestre and Robinson, Scott H. and Nelson, Anthony E. and Cais, Philippe and others},
+  title   = {The {SuperCam} Instrument Suite on the {NASA} {Mars} 2020 Rover: Body Unit and Combined System Tests},
+  journal = {Space Science Reviews},
+  year    = {2021},
+  volume  = {217},
+  number  = {1},
+  pages   = {4},
+  doi     = {10.1007/s11214-020-00777-5}
+}
+
+@article{maurice2021supercam,
+  author  = {Maurice, S. and Wiens, R. C. and Bernardi, P. and Ca{\"\i}s, P. and Robinson, S. and others},
+  title   = {The {SuperCam} Instrument Suite on the {Mars} 2020 Rover: Science Objectives and Mast-Unit Description},
+  journal = {Space Science Reviews},
+  year    = {2021},
+  volume  = {217},
+  number  = {3},
+  pages   = {47},
+  doi     = {10.1007/s11214-021-00807-w}
+}
+
+@article{farley2020mars2020,
+  author  = {Farley, Kenneth A. and Williford, Kenneth H. and Stack, Kathryn M. and Bhartia, Rohit and Chen, Al and others},
+  title   = {{Mars} 2020 Mission Overview},
+  journal = {Space Science Reviews},
+  year    = {2020},
+  volume  = {216},
+  number  = {8},
+  pages   = {142},
+  doi     = {10.1007/s11214-020-00762-y}
+}
+
+@article{bhartia2021sherloc,
+  author  = {Bhartia, Rohit and Beegle, Luther W. and DeFlores, Lauren and Abbey, William and Razzell Hollis, Joseph and others},
+  title   = {Perseverance's Scanning Habitable Environments with {Raman} and Luminescence for Organics and Chemicals ({SHERLOC}) Investigation},
+  journal = {Space Science Reviews},
+  year    = {2021},
+  volume  = {217},
+  number  = {4},
+  pages   = {58},
+  doi     = {10.1007/s11214-021-00812-z}
+}
+
+% PDS4 data bundle (DataCite record for DOI 10.17189/1522646).
+% NOTE: state in the paper which PDS release you downloaded. The local label of
+% supercam_raman.xml in data/supercam_derived/ reads product version 14.0,
+% "Updated for Release 16", modification date 2026-08-11.
+@misc{wiens2021supercambundle,
+  author       = {Wiens, Roger and Maurice, Sylvestre},
+  title        = {{Mars} 2020 {SuperCam} Bundle},
+  howpublished = {NASA Planetary Data System, Geosciences Node},
+  year         = {2021},
+  doi          = {10.17189/1522646},
+  note         = {PDS4 refereed data bundle (urn:nasa:pds:mars2020\_supercam), raw, calibrated and derived products. Derived Raman feature table: data\_derived\_spectra/supercam\_raman.csv}
+}
+
+% Software Interface Specification that documents supercam_raman.csv
+% (Section 5.5.2 "Raman DDR"). Verified from the PDF hosted in the bundle's
+% document collection; front matter lists custodians D. Padgett and S. Algermissen.
+@techreport{jpl2026supercamsis,
+  author      = {{Jet Propulsion Laboratory}},
+  title       = {{SuperCam} Instrument Experiment Data Record ({EDR}) and Reduced Data Records ({CDR}) Data Products for Non-Imaging Components, Software Interface Specification, Version 5.0},
+  institution = {Jet Propulsion Laboratory, California Institute of Technology},
+  type        = {Mars 2020 Project document},
+  number      = {JPL D-99966},
+  year        = {2026},
+  month       = aug,
+  note        = {Custodians: D. Padgett and S. Algermissen. Archived with the Mars 2020 SuperCam PDS bundle},
+  url         = {https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_supercam/document/M2020_SuperCam_EDR_RDR_SIS.pdf}
+}
+
+% ---------------------------------------------------------------------------
+% SuperCam / SHERLOC Raman science results (ground-truth context)
+% ---------------------------------------------------------------------------
+
+@article{lopezreyes2025supercam,
+  author  = {Lopez-Reyes, G. and Manrique, J. A. and Clav{\'e}, E. and Ollila, A. and Beyssac, O. and others},
+  title   = {{SuperCam} {Raman} Activities at {Jezero} Crater, {Mars}: Observational Strategies, Data Processing, and Mineral Detections During the First 1000 Sols},
+  journal = {Journal of Geophysical Research: Planets},
+  year    = {2025},
+  volume  = {130},
+  number  = {11},
+  pages   = {e2025JE008943},
+  doi     = {10.1029/2025JE008943}
+}
+
+@article{farley2022aqueously,
+  author  = {Farley, K. A. and Stack, K. M. and Shuster, D. L. and Horgan, B. H. N. and Hurowitz, J. A. and others},
+  title   = {Aqueously altered igneous rocks sampled on the floor of {Jezero} crater, {Mars}},
+  journal = {Science},
+  year    = {2022},
+  volume  = {377},
+  number  = {6614},
+  pages   = {eabo2196},
+  doi     = {10.1126/science.abo2196}
+}
+
+@article{liu2022olivine,
+  author  = {Liu, Y. and Tice, M. M. and Schmidt, M. E. and Treiman, A. H. and Kizovski, T. V. and others},
+  title   = {An olivine cumulate outcrop on the floor of {Jezero} crater, {Mars}},
+  journal = {Science},
+  year    = {2022},
+  volume  = {377},
+  number  = {6614},
+  pages   = {1513--1519},
+  doi     = {10.1126/science.abo2756}
+}
+
+@article{wiens2022stratified,
+  author  = {Wiens, Roger C. and Udry, Arya and Beyssac, Olivier and Quantin-Nataf, Cathy and Mangold, Nicolas and others},
+  title   = {Compositionally and density stratified igneous terrain in {Jezero} crater, {Mars}},
+  journal = {Science Advances},
+  year    = {2022},
+  volume  = {8},
+  number  = {34},
+  pages   = {eabo3399},
+  doi     = {10.1126/sciadv.abo3399}
+}
+
+@article{clave2023carbonate,
+  author  = {Clav{\'e}, E. and Benzerara, K. and Meslin, P.-Y. and Forni, O. and Royer, C. and others},
+  title   = {Carbonate Detection With {SuperCam} in Igneous Rocks on the Floor of {Jezero} Crater, {Mars}},
+  journal = {Journal of Geophysical Research: Planets},
+  year    = {2023},
+  volume  = {128},
+  number  = {6},
+  pages   = {e2022JE007463},
+  doi     = {10.1029/2022JE007463}
+}
+
+@article{beyssac2023seitah,
+  author  = {Beyssac, O. and Forni, O. and Cousin, A. and Udry, A. and Kah, L. C. and others},
+  title   = {Petrological Traverse of the Olivine Cumulate {S{\'e}{\'\i}tah} Formation at {Jezero} Crater, {Mars}: A Perspective From {SuperCam} Onboard {Perseverance}},
+  journal = {Journal of Geophysical Research: Planets},
+  year    = {2023},
+  volume  = {128},
+  number  = {7},
+  pages   = {e2022JE007638},
+  doi     = {10.1029/2022JE007638}
+}
+
+@article{corpolongo2023sherloc,
+  author  = {Corpolongo, Andrea and Jakubek, Ryan S. and Burton, Aaron S. and Brown, Adrian J. and Yanchilina, Anastasia and others},
+  title   = {{SHERLOC} {Raman} Mineral Class Detections of the {Mars} 2020 Crater Floor Campaign},
+  journal = {Journal of Geophysical Research: Planets},
+  year    = {2023},
+  volume  = {128},
+  number  = {3},
+  pages   = {e2022JE007455},
+  doi     = {10.1029/2022JE007455}
+}
+
+@article{razzellhollis2021library,
+  author  = {Razzell Hollis, Joseph and Abbey, William and Beegle, Luther W. and Bhartia, Rohit and Ehlmann, Bethany L. and others},
+  title   = {A deep-ultraviolet {Raman} and Fluorescence spectral library of 62 minerals for the {SHERLOC} instrument onboard {Mars} 2020},
+  journal = {Planetary and Space Science},
+  year    = {2021},
+  volume  = {209},
+  pages   = {105356},
+  doi     = {10.1016/j.pss.2021.105356}
+}
+
+@article{manrique2024simulcam,
+  author  = {Manrique, Jose A. and Lopez-Reyes, Guillermo and Veneranda, Marco and Sanz-Arranz, Aurelio and Santamaria, Juan Sancho and others},
+  title   = {Characterization of {SimulCam}, a standoff {Raman} system for scientific support of {SuperCam} operations on {Mars}},
+  journal = {Advances in Space Research},
+  year    = {2024},
+  volume  = {74},
+  number  = {8},
+  pages   = {3855--3876},
+  doi     = {10.1016/j.asr.2024.08.007}
+}
+
+% ---------------------------------------------------------------------------
+% Machine learning on Mars / planetary Raman data (closest prior work)
+% ---------------------------------------------------------------------------
+
+@article{berlanga2022cnn,
+  author  = {Berlanga, Genesis and Williams, Quentin and Temiquel, Nathan},
+  title   = {Convolutional Neural Networks as a Tool for {Raman} Spectral Mineral Classification Under Low Signal, Dusty {Mars} Conditions},
+  journal = {Earth and Space Science},
+  year    = {2022},
+  volume  = {9},
+  number  = {10},
+  pages   = {e2021EA002125},
+  doi     = {10.1029/2021EA002125}
+}
+
+@article{wang2026sherloc,
+  author  = {Wang, Likun and Tian, Jing and Cai, Mengna and Chen, Yuzong},
+  title   = {Deep learning of {SHERLOC} {Raman} spectra for facilitating {Mars} Astromaterial identification},
+  journal = {Spectrochimica Acta Part A: Molecular and Biomolecular Spectroscopy},
+  year    = {2026},
+  volume  = {362},
+  pages   = {128181},
+  doi     = {10.1016/j.saa.2026.128181}
+}
+
+@inproceedings{clave2024unsupervised,
+  author       = {Clav{\'e}, E. and Lopez-Reyes, G. and Beyssac, O. and Forni, O. and Ollila, A. and others},
+  title        = {Getting the Most Out of the {SuperCam} {Raman} Dataset with Unsupervised Machine Learning: Characterization of Mineral Signatures and Their Distribution},
+  booktitle    = {55th Lunar and Planetary Science Conference},
+  organization = {Lunar and Planetary Institute},
+  year         = {2024},
+  note         = {Abstract 1828},
+  url          = {https://www.hou.usra.edu/meetings/lpsc2024/pdf/1828.pdf}
+}
+
+@article{veneranda2023chemometrics,
+  author  = {Veneranda, Marco and Manrique, Jose Antonio and Sanz-Arranz, Aurelio and Julve Gonzalez, Sofia and Prieto Garcia, Clara and others},
+  title   = {Application of chemometrics on {Raman} spectra from {Mars}: Recent advances and future perspectives},
+  journal = {Journal of Chemometrics},
+  year    = {2023},
+  volume  = {37},
+  number  = {9},
+  pages   = {e3438},
+  doi     = {10.1002/cem.3438}
+}
+
+@article{veneranda2023carbonate,
+  author  = {Veneranda, M. and Manrique, J. A. and Lopez-Reyes, G. and Julve-Gonzalez, S. and Rull, F. and others},
+  title   = {Developing Tailored Data Combination Strategies to Optimize the {SuperCam} Classification of Carbonate Phases on {Mars}},
+  journal = {Earth and Space Science},
+  year    = {2023},
+  volume  = {10},
+  number  = {7},
+  pages   = {e2023EA002829},
+  doi     = {10.1029/2023EA002829}
+}
+
+@article{julvegonzalez2023machine,
+  author  = {Julve-Gonzalez, Sof{\'\i}a and Manrique, Jose A. and Veneranda, Marco and Reyes-Rodr{\'\i}guez, Iv{\'a}n and Pascual-Sanchez, Elena and others},
+  title   = {Machine learning methods applied to combined {Raman} and {LIBS} spectra: Implications for mineral discrimination in planetary missions},
+  journal = {Journal of Raman Spectroscopy},
+  year    = {2023},
+  volume  = {54},
+  number  = {11},
+  pages   = {1353--1366},
+  doi     = {10.1002/jrs.6611}
+}
+
+@article{johnsen2025dualband,
+  author  = {Johnsen, Timothy K. and Gulick, Virginia C.},
+  title   = {Single- and multi-mineral classification using dual-band {Raman} spectroscopy for planetary surface missions},
+  journal = {American Mineralogist},
+  year    = {2025},
+  volume  = {110},
+  number  = {5},
+  pages   = {685--698},
+  doi     = {10.2138/am-2023-9072}
+}
+
+@inproceedings{ramanan2024twostage,
+  author    = {Ramanan, B. and Bhuvaneswari, S. and Upadhya, Prashanth C. and Venkateswaran, R. and Sriram, K. V.},
+  title     = {Two-stage deep learning pipeline for automated mineral classification in planetary {Raman} spectra},
+  booktitle = {CLEO 2024 (CLEO: Applications and Technology)},
+  publisher = {Optica Publishing Group},
+  year      = {2024},
+  pages     = {JTu2A.208},
+  doi       = {10.1364/CLEO_AT.2024.JTu2A.208}
+}
+
+@article{li2026biosignature,
+  author  = {Li, Yanzhang and Prabhu, Anirudh and Hou, Bingxu and Wong, Michael L. and Lu, Anhuai and Xing, Jieqi and Ngo, Don and Xu, Bo and Hazen, Robert M.},
+  title   = {Mineral biosignature identification from {Raman} spectroscopy using machine learning},
+  journal = {PNAS Nexus},
+  year    = {2026},
+  volume  = {5},
+  number  = {7},
+  pages   = {pgag215},
+  doi     = {10.1093/pnasnexus/pgag215}
+}
+
+% Lab-to-Mars transfer learning exists for LIBS (ChemCam); useful contrast.
+@article{cui2025libs,
+  author  = {Cui, Zhicheng and Li, Luning and Shu, Rong and Yang, Fan and Chen, Yuwei and others},
+  title   = {Laser-induced breakdown spectroscopy chemometrics for {ChemCam} {Mars} in situ data analysis based on deep learning and pretrained-model-based transfer learning},
+  journal = {Journal of Analytical Atomic Spectrometry},
+  year    = {2025},
+  volume  = {40},
+  number  = {9},
+  pages   = {2306--2326},
+  doi     = {10.1039/D4JA00407H}
+}
+
+% ---------------------------------------------------------------------------
+% General Raman mineral ML / library search
+% ---------------------------------------------------------------------------
+
+@article{ishikawa2013automated,
+  author  = {Ishikawa, Sascha T. and Gulick, Virginia C.},
+  title   = {An automated mineral classifier using {Raman} spectra},
+  journal = {Computers \& Geosciences},
+  year    = {2013},
+  volume  = {54},
+  pages   = {259--268},
+  doi     = {10.1016/j.cageo.2013.01.011}
+}
+
+% Crossref title string contains a typo ("formineral"); corrected here.
+@article{carey2015machine,
+  author  = {Carey, C. and Boucher, T. and Mahadevan, S. and Bartholomew, P. and Dyar, M. D.},
+  title   = {Machine learning tools for mineral recognition and classification from {Raman} spectroscopy},
+  journal = {Journal of Raman Spectroscopy},
+  year    = {2015},
+  volume  = {46},
+  number  = {10},
+  pages   = {894--903},
+  doi     = {10.1002/jrs.4757}
+}
+
+@article{liu2017deep,
+  author  = {Liu, Jinchao and Osadchy, Margarita and Ashton, Lorna and Foster, Michael and Solomon, Christopher J. and Gibson, Stuart J.},
+  title   = {Deep convolutional neural networks for {Raman} spectrum recognition: a unified solution},
+  journal = {Analyst},
+  year    = {2017},
+  volume  = {142},
+  number  = {21},
+  pages   = {4067--4074},
+  doi     = {10.1039/C7AN01371J}
+}
+
+@article{jahoda2021machine,
+  author  = {Jahoda, Pavel and Drozdovskiy, Igor and Payler, Samuel J. and Turchi, Leonardo and Bessone, Loredana and Sauro, Francesco},
+  title   = {Machine learning for recognizing minerals from multispectral data},
+  journal = {Analyst},
+  year    = {2021},
+  volume  = {146},
+  number  = {1},
+  pages   = {184--195},
+  doi     = {10.1039/D0AN01483D}
+}
+
+@article{berrada2025ramanmatch,
+  author  = {Berrada, Meryem and McFall, Alan and Chen, Bin},
+  title   = {{Raman} {Match}: Application for automated identification of minerals from {Raman} spectroscopy data},
+  journal = {American Mineralogist},
+  year    = {2025},
+  volume  = {110},
+  number  = {1},
+  pages   = {25--33},
+  doi     = {10.2138/am-2023-9227}
+}
+
+@article{soysal2025reevaluating,
+  author  = {Soysal, Deniz and Garc{\'\i}a-Andrade, Xabier and Rodriguez, Laura E. and Sobron, Pablo and Barge, Laura M. and Detry, Renaud},
+  title   = {Reevaluating Convolutional Neural Networks for Spectral Analysis: A Focus on {Raman} Spectroscopy},
+  journal = {ACS Earth and Space Chemistry},
+  year    = {2025},
+  volume  = {9},
+  number  = {10},
+  pages   = {2395--2412},
+  doi     = {10.1021/acsearthspacechem.5c00136},
+  note    = {Preprint: arXiv:2509.25964}
+}
+
+@article{sineesh2026benchmarking,
+  author  = {Sineesh, Adithya and Kamsali, Akshita Ramya},
+  title   = {Benchmarking deep learning models for {Raman} spectroscopy across open-source datasets},
+  journal = {Digital Discovery},
+  year    = {2026},
+  volume  = {5},
+  number  = {8},
+  pages   = {3314--3327},
+  doi     = {10.1039/D6DD00044D},
+  note    = {Preprint: arXiv:2601.16107}
+}
+
+@misc{koddenbrock2026ramanbench,
+  author        = {Koddenbrock, Mario and Lange, Christoph and Legner, Robin and J{\"a}ger, Martin and K{\"o}gler, Martin and others},
+  title         = {{RamanBench}: A Large-Scale Benchmark for Machine Learning on {Raman} Spectroscopy},
+  year          = {2026},
+  eprint        = {2605.02003},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  note          = {arXiv preprint (v3, 7 Oct 2026); the arXiv journal-ref field lists NeurIPS 2026}
+}
+
+@misc{qin2026perturbation,
+  author        = {Qin, Xiuyi},
+  title         = {Validating Spectral Quality Measures as Proxies for Task Performance: A Controlled-Perturbation Framework for {Raman} Spectroscopy},
+  year          = {2026},
+  eprint        = {2609.28874},
+  archivePrefix = {arXiv},
+  note          = {arXiv preprint}
+}
+
+% ---------------------------------------------------------------------------
+% Preprocessing and domain shift (generic)
+% ---------------------------------------------------------------------------
+
+% Unpublished report; no DOI. Title, authors, institution and date (21 Oct 2005)
+% confirmed only via secondary sources (R packages spant/alkahest/baseline docs,
+% irfpy documentation reproducing the report header).
+@techreport{eilers2005baseline,
+  author      = {Eilers, Paul H. C. and Boelens, Hans F. M.},
+  title       = {Baseline Correction with Asymmetric Least Squares Smoothing},
+  institution = {Leiden University Medical Centre},
+  type        = {Unpublished report},
+  year        = {2005},
+  month       = oct
+}
+
+@inproceedings{tobin2017domain,
+  author    = {Tobin, Josh and Fong, Rachel and Ray, Alex and Schneider, Jonas and Zaremba, Wojciech and Abbeel, Pieter},
+  title     = {Domain randomization for transferring deep neural networks from simulation to the real world},
+  booktitle = {2017 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  address   = {Vancouver, BC, Canada},
+  publisher = {IEEE},
+  year      = {2017},
+  pages     = {23--30},
+  doi       = {10.1109/IROS.2017.8202133}
+}
+
+@article{ganin2016domain,
+  author  = {Ganin, Yaroslav and Ustinova, Evgeniya and Ajakan, Hana and Germain, Pascal and Larochelle, Hugo and Laviolette, Fran{\c{c}}ois and Marchand, Mario and Lempitsky, Victor},
+  title   = {Domain-Adversarial Training of Neural Networks},
+  journal = {Journal of Machine Learning Research},
+  year    = {2016},
+  volume  = {17},
+  number  = {59},
+  pages   = {1--35},
+  url     = {http://jmlr.org/papers/v17/15-239.html}
+}

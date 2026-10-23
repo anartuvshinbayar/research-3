@@ -1,0 +1,18 @@
+{
+  "n_lab_train": 5691,
+  "n_lab_test": 1580,
+  "n_species": 2281,
+  "n_lab_test_species": 790,
+  "n_mars_eval": 255,
+  "n_mars_targets": 48,
+  "selected_model": "cnn-clean",
+  "n_dev_eval": 73,
+  "mars_eval_counts": {
+    "olivine": 119,
+    "carbonate": 77,
+    "sulfate": 29,
+    "pyroxene": 12,
+    "feldspar": 10,
+    "silica": 8
+  }
+}

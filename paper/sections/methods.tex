@@ -1,0 +1,59 @@
+\section{Data}
+\label{sec:data}
+
+\subsection{Laboratory library: RRUFF}
+The RRUFF project distributes Raman spectra of well-characterized mineral samples, many of them confirmed by X-ray diffraction and chemical analysis \citep{lafuente2015rruff}. We downloaded the ``excellent'' and ``fair'' quality unoriented collections (October 2026) and kept every processed spectrum, for all excitation lasers (mostly 532, 780, and 785\,nm). Raman shift does not depend on the laser wavelength, so spectra taken with different lasers are extra examples of the same mineral, although relative peak heights can differ. The library has \nLabSpectra{} spectra of \nSpecies{} mineral species from \nSamples{} physical samples.
+
+We put each species into a mineral group that matches how the SuperCam team reports its identifications. Silicate groups (olivine, pyroxene, feldspar, serpentine, silica) are defined by explicit lists of species names. Carbonates, sulfates, perchlorates, and apatite-group phosphates are defined from the RRUFF ``ideal chemistry'' field, for example a species counts as a carbonate if it contains CO$_3$ and no other anion-forming element (such as S, P, As, Si, B, or V). Every other species is labeled \emph{other}.
+
+\subsection{Mars spectra: SuperCam on Perseverance}
+SuperCam uses a pulsed 532\,nm laser to take Raman spectra of rocks several meters from the rover. Its transmission spectrometer is time-gated, which suppresses much of the mineral fluorescence, and its resolution is about 12\,cm$^{-1}$ (full width at half maximum) in the mineral fingerprint region \citep{wiens2021supercam,maurice2021supercam}. We used two parts of the public SuperCam archive on the NASA Planetary Data System (PDS) Geosciences Node \citep{wiens2021supercambundle}:
+\begin{enumerate}
+\item The \emph{derived} Raman table (\texttt{supercam\_raman.csv}, product version 14.0, archive Release 16). For \nMarsRows{} individual Raman observations, the SuperCam team lists up to four spectral features, each with its Raman shift, band assignment, candidate minerals, and a low, medium, or high confidence. According to the archive documentation, the table includes only spectra with identifiable sample-related Raman features. The team's experts identify a feature by checking its intensity against noise and background, its width against what SuperCam can resolve, and its persistence across the repeated laser shots at each point \citep{jpl2026supercamsis}.
+\item The \emph{calibrated} spectra (FITS files) that those observations refer to. The archive's processing removes spikes, subtracts dark frames, applies wavelet denoising, calibrates the wavenumber axis, and corrects for the instrument response \citep{jpl2026supercamsis}. Each file holds 20 spectra, each co-adding 10 acquisitions, on a Raman-shift axis from about 108 to 7066\,cm$^{-1}$. We used the archive's mean spectrum. We found matching files for \nMarsMatched{} of the \nMarsRows{} observations; one listed product was not in the archive.
+\end{enumerate}
+We converted each observation's candidate minerals into the same mineral groups used for RRUFF (Table~\ref{tab:mars}). A spectrum's \emph{primary} label is the group of its first reported feature. Its \emph{label set} contains every group reported for it, because some points show more than one mineral (for example olivine plus carbonate). These labels are expert interpretations, not absolute ground truth. Some entries are marked low confidence, and some state that the interpretation agrees with SuperCam's other techniques. We report results separately by confidence level.
+
+We split the Mars data by target (rock), so that no rock contributes spectra to both sides. About 30\% of targets form a \emph{development} split, and the rest form the \emph{test} split. The development split was used only to inspect data and to estimate the instrument template described in Section~\ref{sec:artifact}, and its labels were never used for training. All Mars numbers in this paper come from the test split. Serpentine is excluded from scoring because the team identified it only from its OH-stretching band near 3690\,cm$^{-1}$, which lies outside our analysis window and outside most RRUFF processed spectra. The scored test set has \nMarsEval{} spectra from \nMarsTargets{} targets.
+
+\begin{table}[!htbp]
+\centering
+\caption{SuperCam Raman observations with team mineral identifications, by primary mineral group. The test split is used for every Mars result. Serpentine is excluded from scoring (see text).}
+\label{tab:mars}
+\small
+\input{table_mars.tex}
+\end{table}
+
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Preprocessing}
+Lab and Mars spectra go through exactly the same steps. Each spectrum is (i) linearly resampled onto a 2\,cm$^{-1}$ grid from 150 to 1300\,cm$^{-1}$ (576 points), a range that contains every diagnostic band the team reports except the OH band; (ii) baseline-corrected with asymmetric least squares (ALS) \citep{eilers2005baseline} with smoothness $\lambda=10^5$, asymmetry $p=0.01$, and 10 iterations; and (iii) scaled to unit Euclidean norm. Grid points outside a spectrum's measured range are set to zero.
+
+\subsection{Classifiers}
+\paragraph{Library search.} This is the classic ``Shazam'' approach. A query spectrum is compared with every training spectrum by cosine similarity, and it takes the species (and therefore the mineral group) of the best match. We also test two simple, physically motivated fixes. The \emph{resolution-matched} variant blurs every library spectrum with a 12\,cm$^{-1}$ Gaussian before preprocessing, to match SuperCam's resolution. The \emph{skip} variant zeroes the region below 560\,cm$^{-1}$, which is affected by an instrument feature (Section~\ref{sec:artifact}), and renormalizes the spectrum.
+
+\paragraph{1D convolutional neural network (CNN).} The network has four convolutional blocks (16, 32, 64, and 64 channels, kernel widths 21, 15, 9, and 5, each followed by batch normalization, ReLU, and max-pooling by 2), then a 256-unit hidden layer with dropout, then a softmax output over all \nSpecies{} species. It is trained with AdamW (one-cycle learning rate, peak $2\times10^{-3}$, weight decay $10^{-4}$), label smoothing 0.05, batch size 256, for 20 epochs, with random shifts of up to $\pm 3$ grid points. The predicted group is the group of the most probable allowed species, the same decision rule as library search (Appendix~\ref{app:history} compares this with summing probabilities within groups). Each configuration is trained with three random seeds, and their predicted probabilities are averaged.
+
+\subsection{Simulated-Mars training}
+\label{sec:marsify}
+To prepare the CNN for flight data, we turn each lab spectrum into several randomized ``simulated Mars'' versions before preprocessing. This is a form of domain randomization \citep{tobin2017domain}. Five effects are applied:
+\begin{enumerate}
+\item \textbf{Resolution}: Gaussian blurring with a FWHM drawn from 9--15\,cm$^{-1}$, around SuperCam's 12\,cm$^{-1}$.
+\item \textbf{Calibration shift}: a shift of the whole spectrum, drawn from $\mathcal{N}(0, 3^2)$\,cm$^{-1}$.
+\item \textbf{Mixing}: with probability 0.5, a randomly chosen rock-forming mineral (olivine, pyroxene, feldspar, silica, carbonate, sulfate, or serpentine) is added at 10--60\% of the main mineral's peak height. The label stays the main mineral.
+\item \textbf{Background}: a random sum of a decaying low-wavenumber edge, a smooth polynomial, and a broad Gaussian hump, standing in for leftover fluorescence and other broad backgrounds.
+\item \textbf{Noise}: signal-dependent Gaussian noise with a peak signal-to-noise ratio drawn from 3--60.
+\end{enumerate}
+Each training spectrum is used once clean and eight times in simulated-Mars form.
+
+\subsection{Instrument-feature template (the ``fiber bump'')}
+\label{sec:artifact}
+Most SuperCam spectra in our set have a broad, structured feature between about 250 and 520\,cm$^{-1}$, with a sharp drop near 520\,cm$^{-1}$, whatever mineral the team identified (Figure~\ref{fig:gap}, bottom). The SuperCam team has described an optical-fiber artifact in this region, the ``fiber bump'', which affects roughly half of all spectra. In their unsupervised analysis it emerged as its own component, and it had to be cut away before weaker carbonate and perchlorate signals could be seen \citep{clave2024unsupervised,lopezreyes2025supercam}. We do not model its physics. We estimate its shape as the median of the preprocessed \emph{development-split} spectra below 560\,cm$^{-1}$, taper it to zero between 540 and 580\,cm$^{-1}$, and normalize it. During training, half of all training spectra get this template added with a random amplitude between 0 and 2, followed by renormalization. Building the template uses no labels and no test spectra.
+
+\subsection{Evaluation}
+\paragraph{Lab.} For every species with at least two physical samples, one whole sample is held out for testing. This gives \nLabTest{} test spectra of \nLabTestSpecies{} species, and models used in lab evaluations are trained on the remaining \nLabTrain{} spectra. We report species and group accuracy on the clean held-out spectra and on simulated-Mars versions of them at increasing strength. Strength scales every effect in Section~\ref{sec:marsify}, with 1 being the training setting.
+
+\paragraph{Mars.} A prediction counts as correct if its mineral group is in the spectrum's label set. Because olivine makes up \pctOlivine{} of the test set, we use \emph{balanced accuracy} (the mean recall over the six primary groups) as the main metric, and also report plain accuracy. A trivial classifier that always answers ``olivine'' gets \majAcc{} accuracy but only \majBal{} balanced accuracy. Confidence intervals (95\%) come from a cluster bootstrap over targets (2000 resamples), which accounts for the fact that spectra from the same rock are not independent. To compare two methods, we use a paired version of the same bootstrap: both methods are scored on each resampled set of rocks, giving a confidence interval and a two-sided $p$-value for the difference in balanced accuracy.
+
+We evaluate two settings. In the \emph{open-library} setting, a prediction can be any of the \nSpecies{} RRUFF species. In the \emph{Mars-candidate} setting, predictions are restricted to the nine groups the team has reported in Jezero crater (olivine, pyroxene, feldspar, silica, carbonate, sulfate, serpentine, perchlorate, and phosphate). This reflects the prior knowledge a mission team actually has.

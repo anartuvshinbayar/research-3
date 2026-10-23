@@ -1,0 +1,13 @@
+\subsection{Limitations}
+\label{sec:limits}
+\paragraph{The labels are expert interpretations.} Our reference labels are the SuperCam team's identifications, not independent ground truth. Some are marked low confidence, and some lean on SuperCam's other techniques (LIBS and visible/infrared spectroscopy) as well as Raman. A model that ``disagrees'' with a low-confidence label is not necessarily wrong, which is why we also report results by confidence level (Section~\ref{sec:results}).
+
+\paragraph{Only spectra with detectable minerals are included.} The team's table lists only spectra that contain identifiable mineral features \citep{jpl2026supercamsis}. Our test therefore asks ``\emph{which} mineral is this?'' and never ``is there a mineral signal here at all?''. A deployed system would also need to reject spectra with no usable signal, and our numbers say nothing about that.
+
+\paragraph{Small, imbalanced, clustered data.} The test set has \nMarsEval{} spectra from only \nMarsTargets{} rocks. Olivine dominates it, and silica, feldspar, and pyroxene have only 8--12 spectra each. We report balanced accuracy and cluster-bootstrap confidence intervals over rocks, but the per-class numbers for the rarest groups are uncertain, and the intervals are wide.
+
+\paragraph{Processing differs between the two domains.} The Mars spectra come already processed by the mission pipeline (despiking, denoising, response correction) \citep{jpl2026supercamsis}, while the RRUFF spectra come from several laboratory instruments and lasers. We apply the same baseline correction and normalization to both, but some differences remain, for example in relative peak heights between 532 and 785\,nm excitation.
+
+\paragraph{Using unlabeled Mars spectra.} The fiber-bump template is estimated from unlabeled SuperCam spectra of the development split. This is legitimate unsupervised adaptation, since no labels or test spectra are used, but it does use real flight data. The ``simulated-Mars only'' CNN, which uses no Mars data at all, is the purer lab-to-Mars result.
+
+\paragraph{What we did not try.} Lab instruments built to mimic SuperCam \citep{manrique2024simulcam} could provide more realistic training spectra. Domain-adversarial training \citep{ganin2016domain} could use the many unlabeled SuperCam spectra in the archive. The OH band near 3690\,cm$^{-1}$ would be needed to recognize serpentine and other hydrated minerals.

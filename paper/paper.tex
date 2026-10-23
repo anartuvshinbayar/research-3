@@ -1,0 +1,40 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{placeins}
+\captionsetup{font=small,labelfont=bf}
+
+\input{numbers.tex}
+
+\title{Shazam for Mars Rocks? Lab-Trained Raman Mineral Classifiers\\ Meet Real Perseverance SuperCam Spectra}
+\author{Anar Tuvshinbayar\\ \small Independent Researcher, Ulaanbaatar, Mongolia\\ \small \texttt{anartuvshinbayar1@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Raman spectroscopy identifies minerals from the vibrational fingerprints of their crystal structures, and machine-learning classifiers trained on laboratory libraries such as RRUFF routinely report high accuracies. Whether they work on real planetary data, however, has rarely been measured. We built a public benchmark that pairs \nMarsMatched{} calibrated Raman spectra from the SuperCam instrument on NASA's Perseverance rover with the SuperCam team's own mineral identifications. We used it to test classifiers trained only on \nLabSpectra{} RRUFF laboratory spectra. A standard cosine library search identifies the mineral group of held-out laboratory samples \labGrpCleanCosineOpen{} of the time but reaches only \balCosineOpen{} balanced accuracy on \nMarsEval{} held-out Mars spectra, and it matches \fracAmorphOpen{} of them to glasses or other amorphous phases. The main culprit is a broad instrumental ``fiber bump'' below about 560\,cm$^{-1}$. Restricting predictions to mineral groups reported in Jezero crater and skipping that region raises balanced accuracy to \balCosineWindowMars{} (95\% CI \balCICosineWindowMars{}), and to \confHighCW{} accuracy on spectra the team identified with high confidence. A 1D convolutional neural network scores slightly lower (\balCnnCleanMars{}; the difference is not significant). Training it on randomized ``simulated Mars'' versions of the lab spectra made it the most robust model on degraded laboratory spectra, yet \emph{lowered} its real-Mars balanced accuracy to \balCnnMarsifiedMars{}. Robustness to simulated planetary conditions is therefore no substitute for testing on flight data. The accompanying code regenerates every number from the public NASA Planetary Data System and RRUFF archives.
+\end{abstract}
+
+\input{sections/intro.tex}
+\input{sections/methods.tex}
+\input{sections/results.tex}
+\FloatBarrier
+\input{sections/discussion.tex}
+\input{sections/backmatter.tex}
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\input{sections/appendix.tex}
+
+\end{document}
