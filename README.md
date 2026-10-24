@@ -1,4 +1,4 @@
-# Shazam for Mars Rocks?
+# Do Lab-Trained Raman Mineral Classifiers Work on Mars?
 
 Can a mineral classifier trained on Earth lab spectra identify minerals in real
 Raman spectra from NASA's Perseverance rover?

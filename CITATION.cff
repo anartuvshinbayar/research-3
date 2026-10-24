@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code or benchmark, please cite it as below."
-title: "Shazam for Mars Rocks? Lab-Trained Raman Mineral Classifiers Meet Real Perseverance SuperCam Spectra"
+title: "Do Lab-Trained Raman Mineral Classifiers Work on Mars? A Benchmark with Perseverance SuperCam Spectra"
 authors:
   - family-names: Tuvshinbayar
     given-names: Anar
